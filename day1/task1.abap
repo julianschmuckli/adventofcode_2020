@@ -223,7 +223,7 @@ LOOP AT lv_input INTO wa_current_row.
     LOOP AT lv_input INTO wa_current_number.
         IF wa_current_number-num NE wa_current_row-num.
             data(lv_sum) = wa_current_row-num + wa_current_number-num.
-            IF lv_sum EQ 1000.
+            IF lv_sum EQ 2020.
                 data(lv_result) = wa_current_number-num * wa_current_row-num.
                 WRITE: 'Result: ' && lv_result.
             ENDIF.

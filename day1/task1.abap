@@ -6,7 +6,7 @@ END OF t_input.
 DATA: lv_input TYPE TABLE OF t_input WITH HEADER LINE,
       wa_input LIKE LINE OF lv_input.
 
-* Assign the Input
+* Assign with the puzzle input.
 CONCATENATE: '1837 '
 '1585 '
 '1894 '
@@ -214,8 +214,19 @@ LOOP AT t_raw_input INTO data(l_raw_input).
     wa_input-num = l_raw_input.
     APPEND wa_input TO lv_input.
 ENDLOOP.
-                    
-LOOP AT lv_input INTO wa_input.
-    NEW-LINE.
-    WRITE wa_input-num.
+
+* Starting the Task
+DATA: wa_current_number LIKE LINE OF lv_input,
+      wa_current_row LIKE LINE OF lv_input.
+
+LOOP AT lv_input INTO wa_current_row.
+    LOOP AT lv_input INTO wa_current_number.
+        IF wa_current_number-num NE wa_current_row-num.
+            data(lv_sum) = wa_current_row-num + wa_current_number-num.
+            IF lv_sum EQ 1000.
+                data(lv_result) = wa_current_number-num * wa_current_row-num.
+                WRITE: 'Result: ' && lv_result.
+            ENDIF.
+        ENDIF.
+    ENDLOOP.
 endloop.

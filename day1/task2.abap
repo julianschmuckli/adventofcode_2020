@@ -1,3 +1,10 @@
+*&---------------------------------------------------------------------*
+*& Report Z_TEST_REPORT_02
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT z_test_report_02.
+
 * Input declaration
 DATA: lv_input TYPE TABLE OF i WITH EMPTY KEY,
       wa_input LIKE LINE OF lv_input.
@@ -29,6 +36,9 @@ LOOP AT lv_input INTO wa_current_number1.
        ENDIF.
      ENDIF.
     ENDLOOP.
+    IF lv_sum EQ 2020.
+      EXIT.
+    ENDIF.
   ENDLOOP.
   IF lv_sum EQ 2020.
     EXIT.

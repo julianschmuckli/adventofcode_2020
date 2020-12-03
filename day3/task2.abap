@@ -338,32 +338,32 @@ TYPES: BEGIN OF t_slopes,
          times_right TYPE i,
          times_down TYPE i,
        END OF t_slopes.
-       
+
 DATA: lv_slopes TYPE TABLE OF t_slopes,
       lv_current_slope LIKE LINE OF lv_slopes,
       wa_current LIKE LINE OF lv_input,
-      lv_result  TYPE i VALUE 0,
-      lv_total_result TYPE i VALUE 1,
+      lv_result  TYPE int8 VALUE 0,
+      lv_total_result TYPE int8 VALUE 1,
       lv_current_offset TYPE i VALUE 0.
-      
-lv_slopes = VALUE #( 
-    ( times_right = 1 times_down = 1 ) 
-    ( times_right = 3 times_down = 1 ) 
-    ( times_right = 5 times_down = 1 ) 
-    ( times_right = 7 times_down = 1 ) 
-    ( times_right = 1 times_down = 2 ) 
+
+lv_slopes = VALUE #(
+    ( times_right = 1 times_down = 1 )
+    ( times_right = 3 times_down = 1 )
+    ( times_right = 5 times_down = 1 )
+    ( times_right = 7 times_down = 1 )
+    ( times_right = 1 times_down = 2 )
 ).
-      
+
 LOOP AT lv_slopes INTO lv_current_slope.
     LOOP AT lv_input INTO wa_current.
       DATA(lv_length_of_row) = strlen( wa_current-row ).
-      " Get the next line directly -> Going 1 down
-      READ TABLE lv_input INTO DATA(lv_next_line) INDEX ( sy-tabix + lv_current_slope-times_down ).
+      " Get the next line directly -> Going x down
+      READ TABLE lv_input INTO DATA(lv_next_line) INDEX ( 1 + sy-tabix * lv_current_slope-times_down ).
       IF sy-subrc EQ 0.
-        " Going 3 to the right.
+        " Going x to the right.
         lv_current_offset = lv_current_offset + lv_current_slope-times_right.
         DATA(lh_current_offset) = lv_current_offset MOD lv_length_of_row. " Calculate the offset to the endless area.
-    
+
         IF lv_next_line-row+lh_current_offset(1) EQ '#'.
           lv_result = lv_result + 1.
         ENDIF.
@@ -373,6 +373,10 @@ LOOP AT lv_slopes INTO lv_current_slope.
       ENDIF.
     ENDLOOP.
     lv_total_result = lv_result * lv_total_result.
+
+    " Clear variables to start from 0
+    lv_result = 0.
+    lv_current_offset = 0.
 ENDLOOP.
 
 WRITE: 'Total multiplied trees: ' && lv_total_result.

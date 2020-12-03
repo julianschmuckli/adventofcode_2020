@@ -336,12 +336,13 @@ lv_input = VALUE #(
 * Starting the Task
 DATA: wa_current LIKE LINE OF lv_input,
       lv_result  TYPE i VALUE 0,
+      lv_total TYPE i VALUE 0,
       lv_current_offset TYPE i VALUE 0.
 
 LOOP AT lv_input INTO wa_current.
   DATA(lv_length_of_row) = strlen( wa_current-row ).
   " Get the next line directly -> Going 1 down
-  READ TABLE lv_input INTO DATA(lv_next_line) INDEX ( sy-tabix + 2 ).
+  READ TABLE lv_input INTO DATA(lv_next_line) INDEX ( sy-tabix + 1 ).
   IF sy-subrc EQ 0.
     " Going 3 to the right.
     lv_current_offset = lv_current_offset + 3.
@@ -350,7 +351,8 @@ LOOP AT lv_input INTO wa_current.
     IF lv_next_line-row+lh_current_offset(1) EQ '#'.
       lv_result = lv_result + 1.
     ENDIF.
-
+    
+    lv_total = lv_total + 1.
   ELSE.
     " Finished
     EXIT.
@@ -358,3 +360,5 @@ LOOP AT lv_input INTO wa_current.
 ENDLOOP.
 
 WRITE: 'Total trees: ' && lv_result.
+NEW-LINE.
+WRITE: 'Total: '  && lv_total.

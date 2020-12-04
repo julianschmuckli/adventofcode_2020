@@ -317,7 +317,7 @@ DATA: wa_current   LIKE LINE OF lv_input,
       lv_result    TYPE int8 VALUE 0,
       lv_checklist TYPE TABLE OF t_passport_fields,
       wa_checklist LIKE LINE OF lv_checklist,
-      lr_results TYPE match_result_tab.
+      lr_results   TYPE match_result_tab.
 
 LOOP AT lv_input INTO wa_current.
   SPLIT wa_current-row AT ' ' INTO TABLE DATA(lv_fields).
@@ -362,38 +362,49 @@ LOOP AT lv_input INTO wa_current.
           ENDIF.
         ENDIF.
       WHEN 'hcl'.
-        SPLIT lv_property_value AT '' INTO TABLE DATA(lv_color).
-        LOOP AT lv_color INTO DATA(lv_color_part).
-          IF sy-tabix EQ 1.
+        DO 7 TIMES.
+          TRY.
+            DATA(lv_offset) = sy-index - 1.
+            DATA(lv_color_part) = lv_property_value+lv_offset(1).
+          CATCH CX_SY_RANGE_OUT_OF_BOUNDS.
+            EXIT.
+          ENDTRY.
+          IF sy-index EQ 1.
             IF lv_color_part NE '#'.
               EXIT.
             ENDIF.
           ELSE.
             IF
-              lv_color_part GE 0 OR
-              lv_color_part LE 9 OR
               lv_color_part EQ 'a' OR
               lv_color_part EQ 'b' OR
               lv_color_part EQ 'c' OR
               lv_color_part EQ 'd' OR
               lv_color_part EQ 'e' OR
-              lv_color_part EQ 'f'.
+              lv_color_part EQ 'f' OR
+              lv_color_part GE 0 OR
+              lv_color_part LE 9.
             ELSE.
               EXIT.
             ENDIF.
-            IF sy-tabix EQ 6. " If all numbers and letter has been checked above. If it does not reach this line, the value is anyway invalid.
+            IF sy-index EQ 7. " If all numbers and letter has been checked above. If it does not reach this line, the value is anyway invalid.
               wa_checklist-hcl = lv_property_value.
             ENDIF.
           ENDIF.
-        ENDLOOP.
+        ENDDO.
       WHEN 'ecl'.
         CASE lv_property_value.
           WHEN 'amb'.
+            wa_checklist-ecl = lv_property_value.
           WHEN 'blu'.
+            wa_checklist-ecl = lv_property_value.
           WHEN 'brn'.
+            wa_checklist-ecl = lv_property_value.
           WHEN 'gry'.
+            wa_checklist-ecl = lv_property_value.
           WHEN 'grn'.
+            wa_checklist-ecl = lv_property_value.
           WHEN 'hzl'.
+            wa_checklist-ecl = lv_property_value.
           WHEN 'oth'.
             wa_checklist-ecl = lv_property_value.
         ENDCASE.

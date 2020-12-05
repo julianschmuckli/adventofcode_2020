@@ -894,7 +894,8 @@ DATA: lv_cur_row_min     TYPE f VALUE 0,
       lv_cur_row_max     TYPE f VALUE 127,
       lv_cur_col_min     TYPE f VALUE 0,
       lv_cur_col_max     TYPE f VALUE 7,
-      lv_highest_seat_id TYPE i VALUE 0.
+      lv_highest_seat_id TYPE i VALUE 0,
+      lv_seat_id         TYPE i VALUE 0.
 
 LOOP AT lv_input INTO wa_input.
   lv_cur_row_min = 0.
@@ -922,7 +923,7 @@ LOOP AT lv_input INTO wa_input.
     ENDCASE.
   ENDDO.
   " Calculate the unique seat id.
-  DATA(lv_seat_id) = lv_cur_row_min * 8 + lv_cur_col_min.
+  lv_seat_id = lv_cur_row_min * 8 + lv_cur_col_min.
 
   IF lv_seat_id > lv_highest_seat_id.
     lv_highest_seat_id = lv_seat_id.

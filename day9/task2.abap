@@ -1059,9 +1059,7 @@ LOOP AT lv_input INTO DATA(wa_input_a).
       IF sy-index EQ 1.
         DATA(lv_cur_range_start) = lv_cur_num-row.
       ENDIF.
-      IF lv_cur_num IS ASSIGNED.
-        lv_cur_range_sum = lv_cur_range_sum + lv_cur_num-row.
-      ENDIF.
+      lv_cur_range_sum = lv_cur_range_sum + lv_cur_num-row.
     ENDDO.
     DATA(lv_cur_range_end) = lv_cur_num-row.
     IF lv_cur_range_sum EQ wa_cur_result-row.
@@ -1074,4 +1072,4 @@ LOOP AT lv_input INTO DATA(wa_input_a).
 ENDLOOP.
 
 DATA(lv_result) = lv_cur_range_start + lv_cur_range_end.
-WRITE: 'Task 2 - Found range sum: ' && lv_result && ' (' && lv_cur_range_start && '+' && lv_cur_range_start && ')'.
+WRITE: 'Task 2 - Found range sum: ' && lv_result && ' (' && lv_cur_range_start && '-' && lv_cur_range_start && ')'.
